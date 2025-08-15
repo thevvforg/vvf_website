@@ -15,7 +15,7 @@ function Waitlist() {
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const { name, email } = formData;
@@ -33,9 +33,36 @@ function Waitlist() {
       return;
     }
 
+    try {
+      const res = await fetch(
+        "https://api.airtable.com/v0/appE4Zp5qd5mFgNPy/vvf_waitlist",
+        {
+          method : "POST",
+          headers : {
+            Authorization: 'Bearer patER9IB8nZu8qgcf.093d1d88142d3f4e2aa51256ec34a1a7c28cc06632973cc71a068934e7230a47',
+            "Content-Type" : "application/json",
+          },
+          body : JSON.stringify({
+            records : [
+              {
+                fields : {
+                  "name" : formData.name,
+                  "email" : formData.email
+                }
+              },
+            ],
+          }),
+        }
+      );
+      const data = await res.json();
+      console.log(data);
+      setSubmitted(true);
+    } catch (error){
+      console.error(error);
+      alert("Submitssion Failed, Please Contact Admin"); 
+    }
     // Simulate API call or backend submission here
     // For now just show success message
-    setSubmitted(true);
   };
 
   if (submitted) {
